@@ -103,10 +103,11 @@ export async function updateApiKey(id: string, formData: FormData) {
   const { data: { user }, error: userError } = await supabase.auth.getUser()
   if (userError || !user) throw new Error('Unauthorized')
 
+  const rawKey = formData.get('key')
   const rawData = {
     name: formData.get('name'),
     service: formData.get('service'),
-    key: formData.get('key'),
+    key: rawKey !== null && rawKey !== '' ? rawKey : undefined,
   }
 
   const validation = updateApiKeySchema.safeParse(rawData)

@@ -6,7 +6,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { createApiKeySchema, updateApiKeySchema } from '@/lib/schemas/api-key'
 import { createApiKey, updateApiKey } from '@/lib/actions/api-keys'
-import { Loader2, Eye, EyeOff, X, AlertTriangle } from 'lucide-react'
+import { Loader2, Eye, EyeOff, AlertTriangle } from 'lucide-react'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { ApiKey } from '@/types/api-key'
@@ -34,7 +34,7 @@ export function ApiKeyForm({ initialData, onSuccess }: ApiKeyFormProps) {
   type FormValues = {
     name: string
     service: string
-    key: string
+    key?: string
   }
 
   const {

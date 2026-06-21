@@ -17,7 +17,7 @@ export default async function VerifyEmailPage() {
         <BrandLogo href="/" size="md" />
       </div>
 
-      <div className="w-full max-w-sm surface-elevated p-8 text-center flex flex-col items-center">
+      <div className="w-full max-w-sm surface p-8 text-center flex flex-col items-center">
         <div className="w-12 h-12 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-6">
           <MailCheck className="w-5 h-5" strokeWidth={2} />
         </div>
