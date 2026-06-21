@@ -66,7 +66,7 @@ export function ChangePasswordForm() {
         </div>
 
         <div className="pt-2">
-          <button type="submit" disabled={isPending} className="btn-primary px-5 py-2.5">
+          <button type="submit" disabled={isPending} className="btn-accent px-5 py-2.5">
             {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
             {isPending ? 'Updating…' : 'Update password'}
           </button>

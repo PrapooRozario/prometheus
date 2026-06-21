@@ -73,7 +73,7 @@ body {
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 text-sm font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-text-main)]/10 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] disabled:opacity-50 disabled:pointer-events-none px-5 py-2.5 bg-[var(--color-text-main)] text-[var(--color-surface)] rounded-full hover:opacity-90;
+    @apply inline-flex items-center justify-center gap-2 text-sm font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-text-main)]/10 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] disabled:opacity-50 disabled:pointer-events-none px-5 py-2.5 bg-[var(--color-primary)] text-white rounded-full hover:bg-[var(--color-primary-hover)];
   }
 
   .btn-accent {

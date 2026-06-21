@@ -51,5 +51,9 @@ export async function signupAction(prevState: any, formData: FormData) {
     }
   }
 
+  if (!data.session) {
+    redirect('/verify-email')
+  }
+
   redirect('/dashboard')
 }

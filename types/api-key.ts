@@ -4,8 +4,6 @@ export interface ApiKey {
   name: string;
   service: string;
   key_hint: string;
-  notes: string | null;
-  tags: string[];
   created_at: string;
   updated_at: string;
 }
@@ -19,5 +17,4 @@ export interface ApiKeyRow extends ApiKey {
 export interface GetApiKeysFilters {
   search?: string;
   service?: string;
-  tags?: string[];
 }

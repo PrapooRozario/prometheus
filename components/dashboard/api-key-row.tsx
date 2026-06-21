@@ -84,7 +84,7 @@ export function ApiKeyRow({ apiKey }: { apiKey: ApiKey }) {
 
   return (
     <div className="py-4 sm:py-5 px-1 group hover:bg-[var(--color-border-subtle)]/40 sm:hover:bg-transparent transition-colors rounded-lg sm:rounded-none">
-      <div className="grid grid-cols-1 sm:grid-cols-[2fr_1.5fr_2fr_1.5fr_72px] gap-3 sm:gap-4 sm:items-center">
+      <div className="grid grid-cols-1 sm:grid-cols-[2.5fr_2.5fr_1.5fr_72px] gap-3 sm:gap-4 sm:items-center">
         <div className="flex flex-col min-w-0">
           <span className="label sm:hidden mb-1">Name</span>
           <span className="font-medium text-[var(--color-text-main)] truncate text-sm" title={apiKey.name}>
@@ -134,17 +134,6 @@ export function ApiKeyRow({ apiKey }: { apiKey: ApiKey }) {
           )}
         </div>
 
-        <div className="flex flex-col min-w-0">
-          <span className="label sm:hidden mb-1">Tags</span>
-          <div className="flex flex-wrap gap-1.5">
-            {apiKey.tags.length === 0 && <span className="text-sm text-[var(--color-text-muted)]">—</span>}
-            {apiKey.tags.map((tag) => (
-              <span key={tag} className="tag">
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
 
         <div className="flex flex-col min-w-0">
           <span className="label sm:hidden mb-1">Updated</span>

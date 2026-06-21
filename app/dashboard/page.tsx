@@ -1,9 +1,8 @@
 import { getApiKeys } from '@/lib/actions/api-keys'
 import { SearchBar } from '@/components/dashboard/search-bar'
-import { TagFilter } from '@/components/dashboard/tag-filter'
 import { AddKeyModal } from '@/components/dashboard/add-key-modal'
 import { ApiKeyList } from '@/components/dashboard/api-key-list'
-import { Settings } from 'lucide-react'
+import { Settings, UserIcon } from 'lucide-react'
 import Link from 'next/link'
 import { BrandLogo } from '@/components/ui/brand-logo'
 
@@ -18,17 +17,14 @@ export default async function DashboardPage({
 
   const search = typeof params.search === 'string' ? params.search : undefined
   const service = typeof params.service === 'string' ? params.service : undefined
-  const tags = params.tags
-    ? (Array.isArray(params.tags) ? params.tags : [params.tags])
-    : undefined
 
-  const { data: keys, error } = await getApiKeys({ search, service, tags })
+  const { data: keys, error } = await getApiKeys({ search, service })
 
   return (
     <div className="min-h-screen bg-[var(--color-background)]">
       <header className="glass-nav">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <BrandLogo href="/dashboard" size="sm" />
+          <BrandLogo href="/" size="sm" />
 
           <div className="flex items-center gap-1">
             <Link
@@ -38,8 +34,8 @@ export default async function DashboardPage({
             >
               <Settings className="w-[18px] h-[18px]" strokeWidth={1.75} />
             </Link>
-            <div className="w-8 h-8 ml-1 bg-[var(--color-border-subtle)] border border-[var(--color-border)] rounded-full flex items-center justify-center text-[10px] font-medium text-[var(--color-text-muted)]">
-              ME
+            <div className="w-8 h-8 ml-1 bg-[var(--color-border-subtle)] border border-[var(--color-border)] rounded-full flex items-center justify-center text-[10px] font-medium text-[var(--color-text-muted)] hover:border-[var(--color-text-muted)]/30 transition-colors">
+              <UserIcon strokeWidth={1} width={15} height={15}/>
             </div>
           </div>
         </div>
@@ -57,7 +53,6 @@ export default async function DashboardPage({
 
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-center">
             <SearchBar />
-            <TagFilter />
           </div>
 
           <div>

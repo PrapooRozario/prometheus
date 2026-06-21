@@ -19,10 +19,9 @@ export function ApiKeyList({ keys }: { keys: ApiKey[] }) {
 
   return (
     <div className="w-full">
-      <div className="hidden sm:grid sm:grid-cols-[2fr_1.5fr_2fr_1.5fr_72px] gap-4 px-1 pb-3 text-[11px] uppercase tracking-[0.12em] font-medium text-[var(--color-text-muted)]">
+      <div className="hidden sm:grid sm:grid-cols-[2.5fr_2.5fr_1.5fr_72px] gap-4 px-1 pb-3 text-[11px] uppercase tracking-[0.12em] font-medium text-[var(--color-text-muted)]">
         <div>Name & Service</div>
         <div>Key</div>
-        <div>Tags</div>
         <div>Updated</div>
         <div />
       </div>

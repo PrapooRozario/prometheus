@@ -6,6 +6,7 @@ import { AccountInfo } from '@/components/dashboard/settings/account-info'
 import { ChangePasswordForm } from '@/components/dashboard/settings/change-password-form'
 import { SecurityInfo } from '@/components/dashboard/settings/security-info'
 import { DangerZone } from '@/components/dashboard/settings/danger-zone'
+import { LogoutButton } from '@/components/ui/logout-button'
 
 export default async function SettingsPage() {
   const supabase = await createServerClient()
@@ -47,6 +48,9 @@ export default async function SettingsPage() {
             <ChangePasswordForm />
             <SecurityInfo />
             <DangerZone />
+            <div className="pt-2">
+              <LogoutButton />
+            </div>
           </div>
         </div>
       </main>

@@ -10,17 +10,10 @@ export async function createApiKey(formData: FormData) {
   const { data: { user }, error: userError } = await supabase.auth.getUser()
   if (userError || !user) throw new Error('Unauthorized')
 
-  // Support tags passed either as multiple same-named fields or comma separated
-  const tagsData = formData.getAll('tags').length > 1 
-    ? formData.getAll('tags') 
-    : formData.get('tags');
-
   const rawData = {
     name: formData.get('name'),
     service: formData.get('service'),
     key: formData.get('key'),
-    notes: formData.get('notes'),
-    tags: tagsData,
   }
 
   const validation = createApiKeySchema.safeParse(rawData)
@@ -36,14 +29,12 @@ export async function createApiKey(formData: FormData) {
       user_id: user.id, // Defense in depth alongside RLS
       name: validation.data.name,
       service: validation.data.service,
-      notes: validation.data.notes || null,
-      tags: validation.data.tags || [],
       key_hint: validation.data.key.slice(-4).padStart(4, 'x'),
       encrypted_key: encryptedKey,
       iv: iv,
       auth_tag: authTag
     })
-    .select('id, user_id, name, service, key_hint, notes, tags, created_at, updated_at')
+    .select('id, user_id, name, service, key_hint, created_at, updated_at')
     .single()
 
   if (error) {
@@ -61,7 +52,7 @@ export async function getApiKeys(filters?: GetApiKeysFilters) {
 
   let query = supabase
     .from('api_keys')
-    .select('id, user_id, name, service, key_hint, notes, tags, created_at, updated_at')
+    .select('id, user_id, name, service, key_hint, created_at, updated_at')
     .eq('user_id', user.id) // Defense in depth alongside RLS
 
   if (filters?.search) {
@@ -69,9 +60,6 @@ export async function getApiKeys(filters?: GetApiKeysFilters) {
   }
   if (filters?.service) {
     query = query.eq('service', filters.service)
-  }
-  if (filters?.tags && filters.tags.length > 0) {
-    query = query.contains('tags', filters.tags)
   }
 
   const { data, error } = await query.order('created_at', { ascending: false })
@@ -115,16 +103,10 @@ export async function updateApiKey(id: string, formData: FormData) {
   const { data: { user }, error: userError } = await supabase.auth.getUser()
   if (userError || !user) throw new Error('Unauthorized')
 
-  const tagsData = formData.getAll('tags').length > 1 
-    ? formData.getAll('tags') 
-    : formData.get('tags');
-
   const rawData = {
     name: formData.get('name'),
     service: formData.get('service'),
     key: formData.get('key'),
-    notes: formData.get('notes'),
-    tags: tagsData,
   }
 
   const validation = updateApiKeySchema.safeParse(rawData)
@@ -136,8 +118,6 @@ export async function updateApiKey(id: string, formData: FormData) {
   const updates: Record<string, any> = { updated_at: new Date().toISOString() }
   if (validation.data.name !== undefined) updates.name = validation.data.name
   if (validation.data.service !== undefined) updates.service = validation.data.service
-  if (validation.data.notes !== undefined) updates.notes = validation.data.notes || null
-  if (validation.data.tags !== undefined) updates.tags = validation.data.tags || []
 
   // Re-encrypt if a new key was provided and it's not empty string
   if (validation.data.key && validation.data.key.trim().length > 0) {
@@ -153,7 +133,7 @@ export async function updateApiKey(id: string, formData: FormData) {
     .update(updates)
     .eq('id', id)
     .eq('user_id', user.id) // Defense in depth alongside RLS
-    .select('id, user_id, name, service, key_hint, notes, tags, created_at, updated_at')
+    .select('id, user_id, name, service, key_hint, created_at, updated_at')
     .single()
 
   if (error) {

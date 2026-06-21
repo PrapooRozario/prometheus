@@ -30,16 +30,11 @@ export function ApiKeyForm({ initialData, onSuccess }: ApiKeyFormProps) {
   const [showServiceDropdown, setShowServiceDropdown] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
 
-  // Tag Input State
-  const [tagInput, setTagInput] = useState('')
-
   const schema = isEditing ? updateApiKeySchema : createApiKeySchema
   type FormValues = {
     name: string
     service: string
     key: string
-    notes?: string
-    tags: string[]
   }
 
   const {
@@ -55,25 +50,22 @@ export function ApiKeyForm({ initialData, onSuccess }: ApiKeyFormProps) {
       name: initialData?.name || '',
       service: initialData?.service || '',
       key: '', // Always empty initially (not decrypted for edit)
-      notes: initialData?.notes || '',
-      tags: initialData?.tags || [],
     }
   })
 
   // Watch for heuristic warning
   const watchName = watch('name')
-  const watchNotes = watch('notes')
   const [showWarning, setShowWarning] = useState(false)
 
   useEffect(() => {
-    const textToCheck = `${watchName} ${watchNotes}`
+    const textToCheck = watchName
     const keyPatterns = /(sk-[a-zA-Z0-9]{20,}|AIza[a-zA-Z0-9_-]{30,}|ghp_[a-zA-Z0-9]{30,})/
     if (keyPatterns.test(textToCheck)) {
       setShowWarning(true)
     } else {
       setShowWarning(false)
     }
-  }, [watchName, watchNotes])
+  }, [watchName])
 
   const onSubmit = (data: FormValues) => {
     startTransition(async () => {
@@ -81,10 +73,6 @@ export function ApiKeyForm({ initialData, onSuccess }: ApiKeyFormProps) {
       formData.append('name', data.name)
       formData.append('service', data.service)
       if (data.key) formData.append('key', data.key)
-      if (data.notes) formData.append('notes', data.notes)
-      
-      // Tags schema preprocessing accepts comma separated string
-      formData.append('tags', data.tags.join(','))
 
       const result = isEditing 
         ? await updateApiKey(initialData.id, formData)
@@ -192,63 +180,12 @@ export function ApiKeyForm({ initialData, onSuccess }: ApiKeyFormProps) {
         <div className="p-3 bg-amber-50 border border-amber-100 rounded-lg flex items-start gap-3 text-amber-800">
           <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
           <p className="text-sm">
-            <strong>Security Warning:</strong> It looks like you may have accidentally pasted an API key into the Name or Notes field. Please ensure secrets are only pasted into the dedicated API Key field.
+            <strong>Security Warning:</strong> It looks like you may have accidentally pasted an API key into the Name field. Please ensure secrets are only pasted into the dedicated API Key field.
           </p>
         </div>
       )}
 
-      {/* Tags Input */}
-      <div>
-        <label className="label">Tags</label>
-        <Controller
-          name="tags"
-          control={control}
-          render={({ field }) => (
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-wrap gap-2">
-                {field.value.map((tag: string) => (
-                  <span key={tag} className="tag flex items-center gap-1">
-                    {tag}
-                    <button
-                      type="button"
-                      onClick={() => field.onChange(field.value.filter((t: string) => t !== tag))}
-                      className="hover:text-red-500 focus:outline-none"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </span>
-                ))}
-              </div>
-              <input
-                type="text"
-                value={tagInput}
-                onChange={(e) => setTagInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault()
-                    const newTag = tagInput.trim()
-                    if (newTag && !field.value.includes(newTag)) {
-                      field.onChange([...field.value, newTag])
-                      setTagInput('')
-                    }
-                  }
-                }}
-                placeholder="Type a tag and press Enter"
-                className="input-field"
-              />
-            </div>
-          )}
-        />
-      </div>
 
-      <div>
-        <label className="label">Notes</label>
-        <textarea
-          {...register('notes')}
-          rows={3}
-          className="input-field resize-none"
-        ></textarea>
-      </div>
 
       <div className="pt-4 divider">
         <button type="submit" disabled={isPending} className="btn-primary px-6 py-2.5">

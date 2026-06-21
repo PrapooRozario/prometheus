@@ -1,6 +1,7 @@
 import Link from 'next/link'
-import { Shield, Key, Lock, ArrowRight } from 'lucide-react'
+import { Shield, Key, Lock, ArrowRight, Settings, User as UserIcon } from 'lucide-react'
 import { BrandLogo } from '@/components/ui/brand-logo'
+import { createClient as createServerClient } from '@/lib/supabase/server'
 
 const features = [
   {
@@ -23,22 +24,44 @@ const features = [
   },
 ]
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const supabase = await createServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
   return (
     <div className="min-h-screen bg-[var(--color-background)] flex flex-col">
       <nav className="glass-nav">
         <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
           <BrandLogo href="/" size="md" />
           <div className="flex items-center gap-5">
-            <Link
-              href="/login"
-              className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-colors"
-            >
-              Sign in
-            </Link>
-            <Link href="/signup" className="btn-primary text-sm px-4 py-2">
-              Get started
-            </Link>
+            {user ? (
+              <div className="flex items-center gap-1">
+                <Link
+                  href="/dashboard/settings"
+                  className="btn-ghost rounded-full"
+                  title="Settings"
+                >
+                  <Settings className="w-[18px] h-[18px]" strokeWidth={1.75} />
+                </Link>
+                <Link href="/dashboard" title="Dashboard">
+                  <div className="w-8 h-8 ml-1 bg-[var(--color-border-subtle)] border border-[var(--color-border)] rounded-full flex items-center justify-center text-[10px] font-medium text-[var(--color-text-muted)] hover:border-[var(--color-text-muted)]/30 transition-colors">
+                    <UserIcon strokeWidth={1} width={15} height={15}/>
+                  </div>
+                </Link>
+              </div>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-colors"
+                >
+                  Sign in
+                </Link>
+                <Link href="/signup" className="btn-accent text-sm px-4 py-2">
+                  Get started
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </nav>
@@ -57,7 +80,7 @@ export default function LandingPage() {
               Store, organize, and retrieve API keys with confidence.
             </p>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <Link href="/signup" className="btn-primary px-6 py-3">
+              <Link href="/signup" className="btn-accent px-6 py-3">
                 Start building
                 <ArrowRight className="w-4 h-4" />
               </Link>
